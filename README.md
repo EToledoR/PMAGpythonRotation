@@ -1,17 +1,344 @@
 # PMAGpythonRotation
-De-rotation, visualisation and processing of palaeomagnetic poles and plate circuits. 
 
-Basic workflow is Curator to Calculator to either Plotter or Plate Circuit Segmenter. The curator, calculator and plotter are found in cur_calc_plot and the plate circuit analysis folder has Plate_Circuit_Segmenter_With_Bram_Code.ipynb which is the currently working placte circuit analysis.
+Tools for processing, rotating, reconstructing and visualising palaeomagnetic poles and plate circuits.
 
-Loads of stuff is either now redundant, duplicate or is badly stored in general.
+> **Project status:** under active development. This repository is currently being cleaned up and standardised while preserving the existing scientific workflow and results.
 
-Lots of the actual code is also now redundant or is not working fully, needs a general clean up and standardisation before I am going to work on it further. 
+## Overview
 
-TO-DO list:
--Revise information displayed during curator function
--Check dropping of poles even when minimum filtering is applied during curator
--More info for Calculator step
--Fix allocations of R values for kriging stepo
--For map creation make the display of kriging/voronoi be an option during creation not just hard coded in
--Map creation druing plotter is VERY BROKEN
--Change colours for plotted maps in PCS
+PMAGpythonRotation provides a set of Python tools and Jupyter notebooks for processing palaeomagnetic datasets, calculating palaeomagnetic poles and rotations, comparing results with reference pole databases, and reconstructing plate positions through plate circuits.
+
+The project is designed primarily around **Jupyter notebooks**, which are the main user-facing interface for the scientific workflow.
+
+The current workflow can be summarised as:
+
+```text
+Palaeomagnetic dataset
+        │
+        ▼
+     Curator
+        │
+        │ curated dataset
+        ▼
+    Calculator
+        │
+        │ calculated poles,
+        │ rotations and reference comparisons
+        ▼
+      Results
+        │
+        ├───────────────────┐
+        ▼                   ▼
+     Plotter        Plate Circuit Segmenter
+        │                   │
+        ▼                   ▼
+ Visualisation       Plate reconstruction
+```
+
+The underlying Python modules provide reusable functionality used by the notebooks.
+
+---
+
+## Main components
+
+### 1. Curator
+
+The Curator is the first stage of the main workflow.
+
+It imports palaeomagnetic data and prepares them for subsequent calculations by applying data cleaning, filtering and standardisation operations.
+
+Current functionality includes:
+
+* importing palaeomagnetic datasets;
+* mapping dataset-specific column names to the internal data format;
+* filtering datasets according to minimum sample requirements;
+* handling overrepresented sampling locations;
+* filling or estimating missing parameters such as `N`, `K` and `A95`;
+* processing polarity information;
+* handling age information;
+* exporting curated datasets for the Calculator.
+
+The main user-facing notebook is:
+
+```text
+cur_calc_plot/curatorMagic.ipynb
+```
+
+The supporting implementation is currently located in:
+
+```text
+cur_calc_plot/curator_aux_magic.py
+```
+
+The exact input data schema and filtering behaviour are being documented and standardised as part of the current development work.
+
+---
+
+## 2. Calculator
+
+The Calculator performs the main palaeomagnetic calculations.
+
+The current workflow:
+
+1. Reads the curated dataset produced by the Curator.
+2. Converts palaeomagnetic directions and sampling locations into palaeomagnetic/VGP pole positions.
+3. Loads a reference pole database.
+4. Selects reference data according to the age range of each observation.
+5. Generates simulated/pseudopole populations.
+6. Calculates a reference pole and associated uncertainty.
+7. Calculates rotation and poleward-transport related quantities.
+8. Writes the calculated results to a results dataset.
+
+The current implementation also uses Euler pole information when generating reconstructed/reference poles.
+
+The main user-facing notebook is:
+
+```text
+cur_calc_plot/calculatorMagic.ipynb
+```
+
+Supporting functions are currently located in:
+
+```text
+cur_calc_plot/_aux.py
+```
+
+The Calculator also contains the main computationally expensive bootstrap/pseudopole operations. These will be profiled and optimised separately once the current implementation has been validated.
+
+---
+
+## 3. Plotter
+
+The Plotter provides geographic and map-based visualisation of the calculated results.
+
+Current functionality includes visualisation of:
+
+* palaeomagnetic poles;
+* sampling locations;
+* rotations;
+* reconstructed positions;
+* Voronoi regions;
+* kriging/interpolated surfaces;
+* geographic maps.
+
+The current plotting code is primarily notebook-based and is undergoing cleanup and standardisation.
+
+The main plotting notebook is currently:
+
+```text
+cur_calc_plot/plotterMagic copy.ipynb
+```
+
+> **Current status:** map creation and some of the spatial visualisation functionality are known to require further work.
+
+In particular, kriging and Voronoi visualisation are currently more tightly coupled to the map-generation code than intended. These options will eventually be made configurable during map creation.
+
+---
+
+## 4. Plate Circuit Segmenter
+
+The Plate Circuit Segmenter performs a further stage of analysis using plate reconstruction data.
+
+It currently:
+
+1. Reads the results generated by the Calculator.
+2. Uses sampling locations to assign observations to plate IDs.
+3. Uses a plate reconstruction/rotation model to determine plate rotations.
+4. Calculates reconstruction poles and related rotation information.
+5. Produces reconstructed pole positions and visualisations.
+
+The current working notebook is:
+
+```text
+plate_circuit_analysis/Plate_Circuit_Segmenter_With_Bram_Code.ipynb
+```
+
+This component uses **pygplates** and rotation files stored in the `rotations/` directory.
+
+The Plate Circuit Segmenter is currently being reviewed separately from the main Curator → Calculator → Plotter workflow.
+
+---
+
+# Repository structure
+
+The repository is currently being reorganised.
+
+The existing structure contains both active code and historical/experimental material. The intended structure is to keep the following concepts separate:
+
+```text
+PMAGpythonRotation/
+│
+├── cur_calc_plot/
+│   ├── notebooks
+│   └── reusable Python functions
+│
+├── plate_circuit_analysis/
+│   ├── notebooks
+│   └── reusable Python functions
+│
+├── data/
+│   └── input and reference datasets
+│
+├── rotations/
+│   └── plate reconstruction models
+│
+├── results/
+│   └── generated results
+│
+├── tests/
+│   └── validation and regression tests
+│
+└── README.md
+```
+
+The current repository still contains historical notebooks, duplicated code, intermediate files and experimental material. These are being reviewed before removal or consolidation.
+
+---
+
+# Data
+
+The repository currently contains several palaeomagnetic datasets and reference databases used by the example workflows.
+
+Important current inputs include:
+
+* British Isles palaeomagnetic data;
+* Southern Africa palaeomagnetic data;
+* the Vaes et al. (2023) reference database;
+* global APWP data;
+* Euler pole data;
+* plate reconstruction rotation files.
+
+The exact status of each dataset — whether it is an example input, an intermediate product, a reference dataset or generated output — is being reviewed as part of the repository cleanup.
+
+---
+
+# Jupyter notebooks
+
+Jupyter notebooks are the primary user interface for PMAGpythonRotation.
+
+The project is intended to remain accessible to the palaeomagnetic community through notebooks. Refactoring the underlying implementation does **not** mean replacing the notebooks with a command-line or library-only interface.
+
+Instead, the development goal is:
+
+```text
+Jupyter notebook
+       │
+       ▼
+user-facing scientific workflow
+       │
+       ▼
+reusable Python functions
+       │
+       ▼
+validated calculations
+```
+
+This allows the notebooks to remain familiar and convenient for users while reducing duplicated scientific code and making the underlying implementation easier to test and maintain.
+
+---
+
+# Reproducibility and validation
+
+A major goal of the current development effort is to make the existing workflow reproducible.
+
+Before changing the scientific implementation, the current workflow will be executed and its outputs recorded as reference results.
+
+The development process will distinguish between:
+
+### Refactoring
+
+Changes intended to improve the organisation, readability or maintainability of the code without changing scientific results.
+
+### Bug fixes
+
+Changes that intentionally correct behaviour that has been identified as incorrect.
+
+### Scientific changes
+
+Changes to algorithms or assumptions that are expected to alter scientific results.
+
+This distinction is important because changes in numerical output should be explainable and traceable.
+
+The `main` branch should remain in a working state.
+
+---
+
+# Development workflow
+
+Development is organised through GitHub Issues and Pull Requests.
+
+The normal workflow is:
+
+```text
+GitHub Issue
+     │
+     ▼
+Feature/fix branch
+     │
+     ▼
+Implementation
+     │
+     ▼
+Pull Request
+     │
+     ▼
+Review
+     │
+     ▼
+Merge into main
+```
+
+The `main` branch should remain in a working and scientifically validated state.
+
+---
+
+# Current development priorities
+
+The current development effort is organised into several stages.
+
+## 1. Project stabilisation
+
+* establish a reproducible execution environment;
+* document the existing workflow;
+* establish reference outputs;
+* remove obsolete files and code;
+* consolidate duplicated functionality;
+* standardise the repository structure;
+* improve the README and project documentation.
+
+## 2. Functional fixes and validation
+
+Known areas requiring attention include:
+
+* Curator filtering and reporting;
+* Calculator information and output;
+* R-value allocation during kriging;
+* Plotter map generation;
+* configurable Voronoi and kriging visualisation;
+* Plate Circuit Segmenter visualisation.
+
+## 3. Performance
+
+The bootstrap and pseudopole calculations contain potentially expensive repeated numerical operations.
+
+Performance work will begin with profiling the existing implementation and establishing benchmarks.
+
+Possible optimisation approaches include:
+
+* NumPy vectorisation;
+* improved numerical algorithms;
+* parallel execution;
+* Numba or other compiled numerical approaches;
+* a compiled backend where profiling demonstrates that it is justified.
+
+Performance changes will be validated against the established reference results.
+
+---
+
+# Project status
+
+PMAGpythonRotation is currently undergoing a general cleanup and stabilisation.
+
+The existing scientific workflow is being preserved while the repository is reorganised into a more reproducible and maintainable form.
+
+Further documentation will be added as the behaviour and scientific assumptions of the existing implementation are fully understood.
