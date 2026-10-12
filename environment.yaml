@@ -1,0 +1,31 @@
+
+name: pmagrotation-dev
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.12
+  - pip
+  - jupyterlab
+  - ipykernel
+  - numpy
+  - pandas
+  - scipy
+  - matplotlib
+  - seaborn
+  - scikit-learn
+  - geopandas
+  - shapely
+  - cartopy
+  - rasterio
+  - pykrige
+  - libpysal
+  - spopt
+  - folium
+  - geopy
+  - pygplates
+  - plotly
+  - pillow
+  - pip:
+      - pmagpy
