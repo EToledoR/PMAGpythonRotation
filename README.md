@@ -37,6 +37,54 @@ Palaeomagnetic dataset
 
 The underlying Python modules provide reusable functionality used by the notebooks.
 
+## Development environment
+
+The project uses Conda to manage its Python environment. The environment definition is provided in [`environment.yml`](environment.yml).
+
+### Prerequisites
+
+- Git
+- [Miniforge](https://github.com/conda-forge/miniforge), which provides Conda and uses the `conda-forge` package channel
+- A local clone of this repository
+
+### Create the environment
+
+From the root of the cloned repository, run:
+
+```bash
+conda env create -f environment.yml
+conda activate pmagrotation-dev
+```
+
+To verify the Python version:
+
+```bash
+python --version
+```
+
+### Launch JupyterLab
+
+With the environment activated, start JupyterLab from the repository root:
+
+```bash
+jupyter lab
+```
+
+Open the relevant notebook and check that its kernel uses the `pmagrotation-dev` environment. If necessary, verify the interpreter from a notebook cell:
+
+```python
+import sys
+print(sys.executable)
+```
+
+The path should point to the `pmagrotation-dev` environment.
+
+### Current validation status
+
+The environment has been created and the core project imports have been tested on macOS with Apple Silicon and Python 3.12.15.
+
+Execution of the complete scientific workflows and validation on Linux are still pending. Successful package imports do not, by themselves, establish that all notebooks produce scientifically validated results.
+
 ---
 
 ## Main components
