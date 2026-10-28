@@ -52,7 +52,7 @@ The project uses Conda to manage its Python environment. The environment definit
 From the root of the cloned repository, run:
 
 ```bash
-conda env create -f environment.yml
+conda env create -f environment.yaml
 conda activate pmagrotation-dev
 ```
 
@@ -155,20 +155,21 @@ The Calculator also contains the main computationally expensive bootstrap/pseudo
 
 ### Inputs and outputs
 
-The current notebook uses the following files:
-
 **Inputs**
-- `data/tec_c.csv`: curated palaeomagnetic dataset produced by the Curator.
-- `data/Reference_database_Vaes_et_al_2023.xlsx`: reference pole database when `ref_type = 'gapwap'`.
-- `Euler_poles.csv`: Euler pole data, filtered by the configured moving plate ID.
 
-**Intermediate files**
-- `temp_tec.csv`: an intermediate dataset created by the Calculator and subsequently consumed by the Plotter.
+- `tec_c.csv`: curated palaeomagnetic dataset produced by the Curator (currently exported to `data/tec_c.csv`).
+- `Reference_database_Vaes_et_al_2023.xlsx`: reference pole database used when `ref_type = 'gapwap'` (currently located in `data/`).
+- `Euler_poles.csv`: Euler pole data, filtered by the configured moving plate ID (currently expected at the repository root).
+
+**Intermediate file**
+
+- `temp_tec.csv`: an intermediate dataset created by the Calculator and subsequently consumed by the Plotter. The Calculator writes it to the current working directory, but later reads it using a path under `cur_calc_plot/`.
 
 **Output**
+
 - `results/results.csv`: calculated rotation and poleward-transport results.
 
-The notebook currently contains absolute paths tied to a specific Windows installation. The intermediate file is also written and read using different path conventions. Consequently, the workflow is not yet fully portable across installations; these paths will be addressed as part of the reproducibility and standardisation work.
+These locations describe the intended file relationships, not a portable path configuration. The Calculator still contains absolute paths tied to a specific Windows installation, and the intermediate file is written and read using different path conventions. The Plotter variants also contain machine-specific absolute paths. Consequently, the workflow is not yet fully portable across installations; path handling will be addressed as part of the reproducibility and standardisation work.
 
 ---
 
