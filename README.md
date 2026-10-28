@@ -39,7 +39,7 @@ The underlying Python modules provide reusable functionality used by the noteboo
 
 ## Development environment
 
-The project uses Conda to manage its Python environment. The environment definition is provided in [`environment.yml`](environment.yml).
+The project uses Conda to manage its Python environment. The environment definition is provided in [`environment.yaml`](environment.yaml).
 
 ### Prerequisites
 
@@ -153,6 +153,23 @@ cur_calc_plot/_aux.py
 
 The Calculator also contains the main computationally expensive bootstrap/pseudopole operations. These will be profiled and optimised separately once the current implementation has been validated.
 
+### Inputs and outputs
+
+The current notebook uses the following files:
+
+**Inputs**
+- `data/tec_c.csv`: curated palaeomagnetic dataset produced by the Curator.
+- `data/Reference_database_Vaes_et_al_2023.xlsx`: reference pole database when `ref_type = 'gapwap'`.
+- `Euler_poles.csv`: Euler pole data, filtered by the configured moving plate ID.
+
+**Intermediate files**
+- `temp_tec.csv`: an intermediate dataset created by the Calculator and subsequently consumed by the Plotter.
+
+**Output**
+- `results/results.csv`: calculated rotation and poleward-transport results.
+
+The notebook currently contains absolute paths tied to a specific Windows installation. The intermediate file is also written and read using different path conventions. Consequently, the workflow is not yet fully portable across installations; these paths will be addressed as part of the reproducibility and standardisation work.
+
 ---
 
 ## 3. Plotter
@@ -171,11 +188,16 @@ Current functionality includes visualisation of:
 
 The current plotting code is primarily notebook-based and is undergoing cleanup and standardisation.
 
-The main plotting notebook is currently:
+Two Plotter notebook variants are currently present in the repository:
 
-```text
-cur_calc_plot/plotterMagic copy.ipynb
-```
+- `cur_calc_plot/plotterMagic copy.ipynb`
+- `plotterMagicCleaned.ipynb`
+
+Both load the Calculator results and the intermediate `temp_tec.csv` dataset, combine the two datasets, and generate geographic visualisations. They differ in some implementation details, including the handling and display of Voronoi regions.
+
+Neither notebook has yet been established as the canonical plotting workflow. Both contain machine-specific absolute paths, so their input paths must currently be adapted to the local installation.
+
+Selecting and consolidating the canonical Plotter notebook is part of the planned repository standardisation work.
 
 > **Current status:** map creation and some of the spatial visualisation functionality are known to require further work.
 
