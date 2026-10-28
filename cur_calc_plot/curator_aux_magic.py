@@ -124,15 +124,14 @@ def convert_polarity(df: pd.DataFrame) -> pd.DataFrame:
     #Ask if the user wants to convert reverse polarity to normal polarity
     if (norm_df["Polarity"] == "Reverse").sum() != 0:
         convert = input("We found some directions with reverse polarity. Do you want to convert to normal polarity? (Y/N)").strip().lower()
-        if convert == 'Y' or "y":
+        if convert == "y":
             converted_count = 0
             for idx, row in norm_df.iterrows():
                 if row["Polarity"] == "Normal":
                     continue
                 elif row["Polarity"] == "Reverse":
                     norm_df.at[idx, "minc"] = -row["minc"]
-                    norm_df.at[idx, "mdec"] = row["mdec"] + 180
-                    norm_df.at[idx, "mdec"] = row["mdec"] % 360
+                    norm_df.at[idx, "mdec"] = (row["mdec"] + 180) % 360
                     norm_df.at[idx, 'Polarity'] = 'Normal'
                     converted_count += 1 
             print("Number of rows converted to normal polarity:", converted_count)
