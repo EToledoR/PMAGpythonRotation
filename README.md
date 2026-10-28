@@ -52,7 +52,7 @@ The project uses Conda to manage its Python environment. The environment definit
 From the root of the cloned repository, run:
 
 ```bash
-conda env create -f environment.yml
+conda env create -f environment.yaml
 conda activate pmagrotation-dev
 ```
 
