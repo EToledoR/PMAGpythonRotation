@@ -22,3 +22,6 @@ env/
 # Generated map outputs
 map.html
 map_declination.html
+
+# Calculator temporary export in repository root
+/temp_tec.csv
