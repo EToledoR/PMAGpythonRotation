@@ -191,7 +191,7 @@ The current plotting code is primarily notebook-based and is undergoing cleanup 
 Two Plotter notebook variants are currently present in the repository:
 
 - `cur_calc_plot/plotterMagic copy.ipynb`
-- `plotterMagicCleaned.ipynb`
+- `cur_calc_plot/plotterMagicCleaned.ipynb`
 
 Both load the Calculator results and the intermediate `temp_tec.csv` dataset, combine the two datasets, and generate geographic visualisations. They differ in some implementation details, including the handling and display of Voronoi regions.
 
