@@ -186,20 +186,19 @@ Current functionality includes visualisation of:
 * kriging/interpolated surfaces;
 * geographic maps.
 
-The current plotting code is primarily notebook-based and is undergoing cleanup and standardisation.
+The current plotting code is primarily notebook-based.
 
-Two Plotter notebook variants are currently present in the repository:
+The main plotting notebook is:
 
-- `cur_calc_plot/plotterMagic copy.ipynb`
-- `cur_calc_plot/plotterMagicCleaned.ipynb`
+```text
+cur_calc_plot/plotterMagic.ipynb
+```
 
-Both load the Calculator results and the intermediate `temp_tec.csv` dataset, combine the two datasets, and generate geographic visualisations. They differ in some implementation details, including the handling and display of Voronoi regions.
+The notebook loads the Calculator results (`results/results.csv`) and the intermediate curated dataset (`cur_calc_plot/temp_tec.csv`), combines the two datasets and generates geographic visualisations.
 
-Neither notebook has yet been established as the canonical plotting workflow. Both contain machine-specific absolute paths, so their input paths must currently be adapted to the local installation.
+The implementation includes spatial interpolation using ordinary kriging, directional indicators and Voronoi-based spatial analysis.
 
-Selecting and consolidating the canonical Plotter notebook is part of the planned repository standardisation work.
-
-> **Current status:** map creation and some of the spatial visualisation functionality are known to require further work.
+The notebook is still undergoing cleanup. Its input paths are currently machine-specific and need to be standardised before the plotting workflow can be considered portable across installations.
 
 In particular, kriging and Voronoi visualisation are currently more tightly coupled to the map-generation code than intended. These options will eventually be made configurable during map creation.
 
