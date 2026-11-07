@@ -18,3 +18,7 @@ env/
 
 # macOS metadata
 .DS_Store
+
+# Generated map outputs
+map.html
+map_declination.html
