@@ -304,11 +304,8 @@ def cleaning(df,
     return df_clean
 
 
-
-
-def pole_and_rotation_export(df, p1, p2):
-    df.to_csv(p1, index=False)
-    df.to_csv(p2, index=False)
+def pole_and_rotation_export(df, output_path):
+    df.to_csv(output_path, index=False)
 
 def curator(df,
             num_min_samples,
